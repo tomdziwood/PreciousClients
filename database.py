@@ -81,6 +81,9 @@ def insert_data_into_table(list, table, c):
                      VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);'''
             parameters = (cust.id, cust.firstname, cust.lastname, cust.street_address, cust.district, cust.voivodship,
                           cust.postcode, cust.est_income, cust.own_or_rent, cust.date)
+            if cust.own_or_rent == 'R':
+                parameters = (cust.id, cust.firstname, cust.lastname, cust.street_address, cust.district, cust.voivodship,
+                              cust.postcode, cust.est_income/2, cust.own_or_rent, cust.date)
             c.execute(query, parameters)
             c.commit()
     else:
@@ -100,13 +103,14 @@ def test_join(c):
 
 def calculate_b_transactions(c):
     cur = c.cursor()
-    query = '''SELECT lastname, SUM(price*quantity) AS val FROM B_TRANSACTIONS LEFT JOIN B_CUSTOMERS ON B_TRANSACTIONS.custid = B_CUSTOMERS.custid
-               GROUP BY lastname'''
+    query = '''SELECT C.custid, C.firstname, C.lastname, C.street_address, C.district,
+               C.voivodship, SUM(price*quantity) AS purchases FROM B_TRANSACTIONS LEFT JOIN B_CUSTOMERS AS C ON B_TRANSACTIONS.custid = C.custid
+               GROUP BY C.custid'''
     cur.execute(query)
     rows = cur.fetchall()
     for row in rows:
         print(row)
-    return
+    return cur
 
 
 def calculate_a_transactions(c):
@@ -116,28 +120,43 @@ def calculate_a_transactions(c):
     query_pur = '''SELECT F.lname, SUM(quantity*price*(100-discount))
                    FROM A_TRANSACTIONS LEFT JOIN A_CUSTOMERS AS F ON A_TRANSACTIONS.custid = F.custid
                    WHERE transtype = 'PUR'
-                   GROUP BY F.lname'''
+                   GROUP BY F.custid'''
 
     #sum of returns
     query_ret = '''SELECT G.lname, SUM(price)
                    FROM A_TRANSACTIONS LEFT JOIN A_CUSTOMERS AS G ON A_TRANSACTIONS.custid = G.custid
                    WHERE transtype = 'RET'
-                   GROUP BY G.lname'''
+                   GROUP BY G.custid'''
 
     #purchases-returns
-    query = '''SELECT H.lname, pur - IFNULL(ret, 0)
-               FROM (SELECT F.lname, SUM(quantity*price*(100-discount)) as pur
+    query = '''SELECT H.custid, H.fname, H.lname, H.street_address, H.district, H.voivodship,
+               H.postcode, H.preferred, pur - IFNULL(ret, 0) as purchases              
+               FROM (SELECT F.custid, F.fname, F.lname, F.street_address, F.district, F.voivodship,
+               F.postcode, F.preferred, SUM(quantity*price*(100-discount)) as pur               
                      FROM A_TRANSACTIONS LEFT JOIN A_CUSTOMERS AS F ON A_TRANSACTIONS.custid = F.custid
                      WHERE transtype = 'PUR'
-                     GROUP BY F.lname) AS H left join (
-                        SELECT G.lname, SUM(price) as ret
+                     GROUP BY F.custid) AS H left join (
+                        SELECT G.custid, G.lname, SUM(price) as ret
                         FROM A_TRANSACTIONS LEFT JOIN A_CUSTOMERS AS G ON A_TRANSACTIONS.custid = G.custid
                         WHERE transtype = 'RET'
-                        GROUP BY G.lname) AS I ON H.lname = I.lname'''
+                        GROUP BY G.custid) AS I ON H.custid = I.custid'''
     cur.execute(query)
     rows = cur.fetchall()
     for row in rows:
         print(row)
-    return
+    return cur
 
 
+def select_from_customerinfo(c):
+    cur = c.cursor()
+    query = '''SELECT id, firstname, lastname, street_address, district, voivodship, postcode, est_income, 
+               own_or_rent FROM C_CUSTOMERINFO'''
+    cur.execute(query)
+    rows = cur.fetchall()
+    for row in rows:
+        print(row)
+    return cur
+
+# TODO: Insert data from all returned cursors to one table
+# TODO: Parammetrize function to find best customers
+# TODO: Test solution
