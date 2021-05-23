@@ -36,7 +36,7 @@ def create_tables(c):
     c.execute('''CREATE TABLE IF NOT EXISTS C_CUSTOMERINFO
                  (id number PRIMARY KEY, firstname varchar, lastname string, street_address varchar, 
                  district varchar, voivodship varchar, postcode number, est_income number, own_or_rent varchar,
-                 date date, newline varchar)''')
+                 cdate date, newline varchar)''')
     return
 
 
@@ -72,12 +72,17 @@ def insert_data_into_table(list, table, c):
         for trans in list:
             query = '''INSERT INTO B_TRANSACTIONS (transid, prodid, price, quantity, transdate, custid)
                      VALUES(?, ?, ?, ?, ?, ?);'''
-            parameters = (
-            trans.transid, trans.prodid, trans.price, trans.quantity, trans.transdate, trans.custid)
+            parameters = (trans.transid, trans.prodid, trans.price, trans.quantity, trans.transdate, trans.custid)
             c.execute(query, parameters)
             c.commit()
     elif table == 'C_CUSTOMERINFO':
-        pass
+        for cust in list:
+            query = '''INSERT INTO C_CUSTOMERINFO (id, firstname, lastname, street_address, district, voivodship, postcode, est_income, own_or_rent, cdate)
+                     VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);'''
+            parameters = (cust.id, cust.firstname, cust.lastname, cust.street_address, cust.district, cust.voivodship,
+                          cust.postcode, cust.est_income, cust.own_or_rent, cust.date)
+            c.execute(query, parameters)
+            c.commit()
     else:
         pass
     return
@@ -90,9 +95,6 @@ def test_join(c):
     rows = cur.fetchall()
     for row in rows:
         print(row)
+    return
 
 
-
-# conn = create_connection('test.db')
-# create_tables(conn)
-# insert_data_into_table(a_customer_list, 'A_CUSTOMERS', conn)

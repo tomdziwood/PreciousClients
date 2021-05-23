@@ -147,7 +147,7 @@ def read_cust_info():
     return cust_info_list
 
 
-def checkAllCharacters(cust_info_list):
+def check_all_characters(cust_info_list):
     all_distinct_letters = set()
     for cust_info in cust_info_list:
         # print(str(cust_info))
@@ -158,7 +158,7 @@ def checkAllCharacters(cust_info_list):
     print(all_distinct_letters)
 
 
-def checkPersonRepetition(a_customer_list, b_customer_list, cust_info_list):
+def check_person_repetition(a_customer_list, b_customer_list, cust_info_list):
     counter = 0
     for a_customer in a_customer_list:
         for b_customer in b_customer_list:
@@ -217,13 +217,15 @@ def main():
     print(str(len(cust_info_list)))
     [print(x) for x in cust_info_list[:30]]
 
-    '''Moje'''
+    '''Connect to db'''
     conn = create_connection('test.db')
+    '''Uncomment these if you want to initialize your tables and add data to them'''
     # create_tables(conn)
     # insert_data_into_table(a_customer_list, 'A_CUSTOMERS', conn)
     # insert_data_into_table(a_transaction_list, 'A_TRANSACTIONS', conn)
     # insert_data_into_table(b_customer_list, 'B_CUSTOMERS', conn)
     # insert_data_into_table(b_transaction_list, 'B_TRANSACTIONS', conn)
+    # insert_data_into_table(cust_info_list, 'C_CUSTOMERINFO', conn)
     test_join(conn)
 
 
