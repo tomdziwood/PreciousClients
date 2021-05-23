@@ -6,7 +6,7 @@ from model.ATransaction import ATransaction
 from model.BCustomer import BCustomer
 from model.BTransaction import BTransaction
 from model.CustInfo import CustInfo
-from database import create_tables, create_connection, insert_data_into_table, test_join
+from database import create_tables, create_connection, insert_data_into_table, test_join, calculate_b_transactions
 
 
 def read_a_customers():
@@ -90,7 +90,7 @@ def read_b_transactions():
             price = int(splitted[2])
             quantity = int(splitted[3])
             transdate = splitted[4]
-            custid = int(splitted[0])
+            custid = int(splitted[5])
 
             b_transaction = BTransaction(transid, prodid, price, quantity, transdate, custid)
             # print(b_transaction)
@@ -226,7 +226,8 @@ def main():
     # insert_data_into_table(b_customer_list, 'B_CUSTOMERS', conn)
     # insert_data_into_table(b_transaction_list, 'B_TRANSACTIONS', conn)
     # insert_data_into_table(cust_info_list, 'C_CUSTOMERINFO', conn)
-    test_join(conn)
+
+    # calculate_b_transactions(conn)
 
 
 if __name__ == '__main__':

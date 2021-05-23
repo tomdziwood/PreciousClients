@@ -98,3 +98,14 @@ def test_join(c):
     return
 
 
+def calculate_b_transactions(c):
+    cur = c.cursor()
+    query = '''SELECT * FROM B_TRANSACTIONS LEFT JOIN B_CUSTOMERS ON B_TRANSACTIONS.custid = B_CUSTOMERS.custid'''
+    cur.execute(query)
+    rows = cur.fetchall()
+    print('a')
+    for row in rows:
+        print(row)
+    return
+
+
