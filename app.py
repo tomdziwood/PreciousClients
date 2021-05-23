@@ -6,7 +6,7 @@ from model.ATransaction import ATransaction
 from model.BCustomer import BCustomer
 from model.BTransaction import BTransaction
 from model.CustInfo import CustInfo
-from database import create_tables, create_connection, insert_data_into_table, test_join, calculate_b_transactions
+from database import create_tables, create_connection, insert_data_into_table, test_join, calculate_b_transactions, calculate_a_transactions
 
 
 def read_a_customers():
@@ -198,24 +198,24 @@ def check_person_repetition(a_customer_list, b_customer_list, cust_info_list):
 
 def main():
     a_customer_list = read_a_customers()
-    print(str(len(a_customer_list)))
-    [print(x) for x in a_customer_list[:30]]
+    # print(str(len(a_customer_list)))
+    # [print(x) for x in a_customer_list[:30]]
 
     a_transaction_list = read_a_transactions()
-    print(str(len(a_transaction_list)))
-    [print(x) for x in a_transaction_list[:30]]
+    # print(str(len(a_transaction_list)))
+    # [print(x) for x in a_transaction_list[:30]]
 
     b_customer_list = read_b_customers()
-    print(str(len(b_customer_list)))
-    [print(x) for x in b_customer_list[:30]]
+    # print(str(len(b_customer_list)))
+    # [print(x) for x in b_customer_list[:30]]
 
     b_transaction_list = read_b_transactions()
-    print(str(len(b_transaction_list)))
-    [print(x) for x in b_transaction_list[:30]]
+    # print(str(len(b_transaction_list)))
+    # [print(x) for x in b_transaction_list[:30]]
 
     cust_info_list = read_cust_info()
-    print(str(len(cust_info_list)))
-    [print(x) for x in cust_info_list[:30]]
+    # print(str(len(cust_info_list)))
+    # [print(x) for x in cust_info_list[:30]]
 
     '''Connect to db'''
     conn = create_connection('test.db')
@@ -227,7 +227,7 @@ def main():
     # insert_data_into_table(b_transaction_list, 'B_TRANSACTIONS', conn)
     # insert_data_into_table(cust_info_list, 'C_CUSTOMERINFO', conn)
 
-    # calculate_b_transactions(conn)
+    calculate_a_transactions(conn)
 
 
 if __name__ == '__main__':

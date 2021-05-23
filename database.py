@@ -100,10 +100,42 @@ def test_join(c):
 
 def calculate_b_transactions(c):
     cur = c.cursor()
-    query = '''SELECT * FROM B_TRANSACTIONS LEFT JOIN B_CUSTOMERS ON B_TRANSACTIONS.custid = B_CUSTOMERS.custid'''
+    query = '''SELECT lastname, SUM(price*quantity) AS val FROM B_TRANSACTIONS LEFT JOIN B_CUSTOMERS ON B_TRANSACTIONS.custid = B_CUSTOMERS.custid
+               GROUP BY lastname'''
     cur.execute(query)
     rows = cur.fetchall()
-    print('a')
+    for row in rows:
+        print(row)
+    return
+
+
+def calculate_a_transactions(c):
+    cur = c.cursor()
+
+    #sum of purchases
+    query_pur = '''SELECT F.lname, SUM(quantity*price*(100-discount))
+                   FROM A_TRANSACTIONS LEFT JOIN A_CUSTOMERS AS F ON A_TRANSACTIONS.custid = F.custid
+                   WHERE transtype = 'PUR'
+                   GROUP BY F.lname'''
+
+    #sum of returns
+    query_ret = '''SELECT G.lname, SUM(price)
+                   FROM A_TRANSACTIONS LEFT JOIN A_CUSTOMERS AS G ON A_TRANSACTIONS.custid = G.custid
+                   WHERE transtype = 'RET'
+                   GROUP BY G.lname'''
+
+    #purchases-returns
+    query = '''SELECT H.lname, pur - IFNULL(ret, 0)
+               FROM (SELECT F.lname, SUM(quantity*price*(100-discount)) as pur
+                   FROM A_TRANSACTIONS LEFT JOIN A_CUSTOMERS AS F ON A_TRANSACTIONS.custid = F.custid
+                   WHERE transtype = 'PUR'
+                   GROUP BY F.lname) AS H left join (
+                        SELECT G.lname, SUM(price) as ret
+                        FROM A_TRANSACTIONS LEFT JOIN A_CUSTOMERS AS G ON A_TRANSACTIONS.custid = G.custid
+                        WHERE transtype = 'RET'
+                        GROUP BY G.lname) AS I ON H.lname = I.lname'''
+    cur.execute(query)
+    rows = cur.fetchall()
     for row in rows:
         print(row)
     return
