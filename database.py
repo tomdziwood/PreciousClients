@@ -127,9 +127,9 @@ def calculate_a_transactions(c):
     #purchases-returns
     query = '''SELECT H.lname, pur - IFNULL(ret, 0)
                FROM (SELECT F.lname, SUM(quantity*price*(100-discount)) as pur
-                   FROM A_TRANSACTIONS LEFT JOIN A_CUSTOMERS AS F ON A_TRANSACTIONS.custid = F.custid
-                   WHERE transtype = 'PUR'
-                   GROUP BY F.lname) AS H left join (
+                     FROM A_TRANSACTIONS LEFT JOIN A_CUSTOMERS AS F ON A_TRANSACTIONS.custid = F.custid
+                     WHERE transtype = 'PUR'
+                     GROUP BY F.lname) AS H left join (
                         SELECT G.lname, SUM(price) as ret
                         FROM A_TRANSACTIONS LEFT JOIN A_CUSTOMERS AS G ON A_TRANSACTIONS.custid = G.custid
                         WHERE transtype = 'RET'

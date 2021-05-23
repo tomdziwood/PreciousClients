@@ -16,7 +16,7 @@ def read_a_customers():
         for line in file:
             custid = int(line[:8])
             fname = line[8:28].rstrip().upper()
-            lname = line[28:53].rstrip()
+            lname = line[28:53].rstrip().upper()
             street_address = line[53:143].rstrip()
             district = line[143:173].rstrip()
             voivodship = line[173:193].rstrip()
