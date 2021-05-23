@@ -13,7 +13,7 @@ def read_a_customers():
     with codecs.open('data/a-customers.dat', encoding='iso-8859-2') as file:
         for line in file:
             custid = int(line[:8])
-            fname = line[8:28].rstrip()
+            fname = line[8:28].rstrip().upper()
             lname = line[28:53].rstrip()
             street_address = line[53:143].rstrip()
             district = line[143:173].rstrip()
@@ -45,8 +45,7 @@ def read_a_transactions():
             returnid = int(line[45:54]) if transtype == 'RET' else None
             reason = line[54:84] if transtype == 'RET' else None
 
-            a_transaction = ATransaction(transid, transtype, transdate, custid, prodid, quantity, price, discount,
-                                         returnid, reason)
+            a_transaction = ATransaction(transid, transtype, transdate, custid, prodid, quantity, price, discount, returnid, reason)
             # print(a_transaction)
 
             a_transaction_list.append(a_transaction)
@@ -66,7 +65,7 @@ def read_b_customers():
             lastname = splitted[2]
             street_address = splitted[3]
             district = splitted[4]
-            voivodship = splitted[5]
+            voivodship = splitted[5].upper()
             postcode = int(splitted[6][:2]) * 1000 + int(splitted[6][3:6])
 
             b_customer = BCustomer(custid, firstname, lastname, street_address, district, voivodship, postcode)
@@ -99,6 +98,25 @@ def read_b_transactions():
     return b_transaction_list
 
 
+NATIVE_POLISH_IBM = ['¯', 'Æ', '¿', '¼', 'æ', '³', '¦', 'ñ', '¶', '£', '±', 'ê', '^']
+NATIVE_POLISH_ISO = ['Ż', 'Ć', 'ż', 'ź', 'ć', 'ł', 'Ś', 'ń', 'ś', 'Ł', 'ą', 'ę', 'Ź']
+
+
+def converse_native_characters(character: str):
+    if character in NATIVE_POLISH_IBM:
+        i = NATIVE_POLISH_IBM.index(character)
+        return NATIVE_POLISH_ISO[i].encode(encoding="iso-8859-2")
+    else:
+        return character.encode(encoding="iso-8859-2")
+
+
+def converse_words_with_native_characters(string: str):
+    list_of_bytes = [converse_native_characters(character) for character in string]
+    concatenated_bytes = b''.join(list_of_bytes)
+    new_string = codecs.decode(concatenated_bytes, encoding='iso-8859-2')
+    return new_string
+
+
 def read_cust_info():
     cust_info_list = []
 
@@ -106,14 +124,14 @@ def read_cust_info():
         fileInOneLine = file.readline()
         n = 307
         for i in range(0, len(fileInOneLine), n):
-            line = fileInOneLine[i:i+n]
+            line = fileInOneLine[i:i + n]
 
             id = int(line[:9])
-            firstname = line[9:51].rstrip()
-            lastname = line[51:83].rstrip()
-            street_address = line[83:193].rstrip()
-            district = line[193:233].rstrip()
-            voivodship = line[233:283].rstrip()
+            firstname = converse_words_with_native_characters(line[9:51].rstrip())
+            lastname = converse_words_with_native_characters(line[51:83].rstrip()).upper()
+            street_address = converse_words_with_native_characters(line[83:193].rstrip())
+            district = converse_words_with_native_characters(line[193:233].rstrip())
+            voivodship = converse_words_with_native_characters(line[233:283].rstrip()).upper()
             postcode = int(line[283:288])
             est_income = int(line[288:296])
             own_or_rent = line[296]
@@ -127,19 +145,76 @@ def read_cust_info():
     return cust_info_list
 
 
+def checkAllCharacters(cust_info_list):
+    all_distinct_letters = set()
+    for cust_info in cust_info_list:
+        # print(str(cust_info))
+        distinct_letters = set(str(cust_info))
+        # print(distinct_letters)
+        all_distinct_letters.update(distinct_letters)
+
+    print(all_distinct_letters)
+
+
+def checkPersonRepetition(a_customer_list, b_customer_list, cust_info_list):
+    counter = 0
+    for a_customer in a_customer_list:
+        for b_customer in b_customer_list:
+            if (a_customer.fname == b_customer.firstname) and (a_customer.lname.upper() == b_customer.lastname):
+                counter += 1
+                print("Equal:")
+                print(a_customer)
+                print(b_customer)
+                if a_customer.street_address != b_customer.street_address:
+                    print("Different street address!!!")
+    print("Counter: " + str(counter))
+
+    counter = 0
+    for a_customer in a_customer_list:
+        for cust_info in cust_info_list:
+            if (a_customer.fname == cust_info.firstname) and (a_customer.lname.upper() == cust_info.lastname.upper()):
+                counter += 1
+                print("Equal:")
+                print(a_customer)
+                print(cust_info)
+                if a_customer.street_address != cust_info.street_address:
+                    print("Different street address!!!")
+    print("Counter: " + str(counter))
+
+    counter = 0
+    for b_customer in b_customer_list:
+        for cust_info in cust_info_list:
+            if (b_customer.firstname == cust_info.firstname) and (b_customer.lastname == cust_info.lastname.upper()):
+                counter += 1
+                print("Equal:")
+                print(b_customer)
+                print(cust_info)
+                if b_customer.street_address != cust_info.street_address:
+                    print("Different street address!!!")
+    print("Counter: " + str(counter))
+
+
 def main():
     a_customer_list = read_a_customers()
-    a_transaction_list = read_a_transactions()
-    b_customer_list = read_b_customers()
-    b_transaction_list = read_b_transactions()
-    cust_info_list = read_cust_info()
+    print(str(len(a_customer_list)))
+    [print(x) for x in a_customer_list[:30]]
 
-    ostatni = cust_info_list[-1]
-    print(ostatni)
-    street_address: str = ostatni.street_address
-    print(street_address)
-    print(street_address.encode(encoding='utf-8'))
-    print(street_address.encode(encoding='iso-8859-2'))
+    a_transaction_list = read_a_transactions()
+    print(str(len(a_transaction_list)))
+    [print(x) for x in a_transaction_list[:30]]
+
+    b_customer_list = read_b_customers()
+    print(str(len(b_customer_list)))
+    [print(x) for x in b_customer_list[:30]]
+
+    b_transaction_list = read_b_transactions()
+    print(str(len(b_transaction_list)))
+    [print(x) for x in b_transaction_list[:30]]
+
+    cust_info_list = read_cust_info()
+    print(str(len(cust_info_list)))
+    [print(x) for x in cust_info_list[:30]]
+
 
 if __name__ == '__main__':
     main()
