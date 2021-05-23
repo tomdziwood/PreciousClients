@@ -1,10 +1,12 @@
 import codecs
+import sqlite3
 
 from model.ACustomer import ACustomer
 from model.ATransaction import ATransaction
 from model.BCustomer import BCustomer
 from model.BTransaction import BTransaction
 from model.CustInfo import CustInfo
+from database import create_tables, create_connection, insert_data_into_table, test_join
 
 
 def read_a_customers():
@@ -134,12 +136,23 @@ def main():
     b_transaction_list = read_b_transactions()
     cust_info_list = read_cust_info()
 
-    ostatni = cust_info_list[-1]
-    print(ostatni)
-    street_address: str = ostatni.street_address
-    print(street_address)
-    print(street_address.encode(encoding='utf-8'))
-    print(street_address.encode(encoding='iso-8859-2'))
+    # ostatni = cust_info_list[-1]
+    # print(ostatni)
+    # street_address: str = ostatni.street_address
+    # print(street_address)
+    # print(street_address.encode(encoding='utf-8'))
+    # print(street_address.encode(encoding='iso-8859-2'))
+    #print(b_customer_list[0].firstname)
+
+    '''Moje'''
+    conn = create_connection('test.db')
+    # create_tables(conn)
+    # insert_data_into_table(a_customer_list, 'A_CUSTOMERS', conn)
+    # insert_data_into_table(a_transaction_list, 'A_TRANSACTIONS', conn)
+    # insert_data_into_table(b_customer_list, 'B_CUSTOMERS', conn)
+    # insert_data_into_table(b_transaction_list, 'B_TRANSACTIONS', conn)
+    test_join(conn)
+
 
 if __name__ == '__main__':
     main()
