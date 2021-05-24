@@ -1,5 +1,5 @@
 import sqlite3
-
+import csv
 
 def create_connection(db_file):
     """ create a database connection to the SQLite database
@@ -17,12 +17,12 @@ def create_connection(db_file):
 
 def create_tables(c):
     c.execute('''CREATE TABLE IF NOT EXISTS A_CUSTOMERS
-                 (custid number PRIMARY KEY, fname varchar, lname varchar, street_address varchar[100], district varchar, 
-                 voivodship varchar, postcode number, preferred number, tabsource char)''')
+                 (custid number[8] PRIMARY KEY, fname varchar[20], lname varchar[25], street_address varchar[90], district varchar[30], 
+                 voivodship varchar[20], postcode number[5], preferred number[1], tabsource char)''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS A_TRANSACTIONS
-                 (transid number PRIMARY KEY, transtype varchar, transdate date, custid number, prodid varchar, 
-                 quantity number, price number, discount number, returnid number, reason varchar,
+                 (transid number[9] PRIMARY KEY, transtype varchar[3], transdate date[6], custid number[8], prodid varchar[8], 
+                 quantity number[3], price number[7], discount number[3], returnid number[9], reason varchar[30],
                  FOREIGN KEY (custid) REFERENCES A_CUSTOMERS (custid))''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS B_CUSTOMERS
@@ -34,9 +34,9 @@ def create_tables(c):
                  custid number, FOREIGN KEY (custid) REFERENCES B_CUSTOMERS (custid))''')
 
     c.execute('''CREATE TABLE IF NOT EXISTS C_CUSTOMERINFO
-                 (id number PRIMARY KEY, firstname varchar, lastname string, street_address varchar, 
-                 district varchar, voivodship varchar, postcode number, est_income number, own_or_rent varchar,
-                 cdate date, tabsource char)''')
+                 (id number[9] PRIMARY KEY, firstname varchar[42], lastname varchar[32], street_address varchar[110], 
+                 district varchar[40], voivodship varchar[50], postcode number[5], est_income number[8], own_or_rent varchar[1],
+                 cdate date[10], tabsource char)''')
     return
 
 
@@ -223,6 +223,13 @@ def insert_into_final_table(c, insert):
                "est_income, own_or_rent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         cur.executemany(stmt, data_c)
         c.commit()
+
+    cur.execute(query_inner)
+    data_ab = cur.fetchall()
+    for row in data_ab:
+        print(row)
+    return cur
+
     return
 
 
@@ -254,5 +261,16 @@ def find_best_customers(c, income_treshold=200000, transaction_treshold=500, vip
     data = cur.fetchall()
     for row in data:
         print(row)
+    return
+
+
+def write_result_to_file(c):
+    cursor = c.cursor()
+    cursor.execute("SELECT * FROM FINAL_TABLE")
+    rows = cursor.fetchall()
+    with open("test1.tsv", "w", newline="", encoding='utf-8') as f:  # On Python 3.x use "w" mode and newline=""
+        writer = csv.writer(f, delimiter="|")  # create a CSV writer, tab delimited
+        writer.writerows(rows)  # write your SQLite data
+    return
 
 
