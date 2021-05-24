@@ -1573,8 +1573,6 @@
 8425|A|KSAWERY|ŚNIĘCKA|Poczta Rościszewo, ul. Jana Pawła II 30|sierpecki|MAZOWIECKIE|9204|1|30710|R|44554.5
 183012|B|ALICJA|ŚPISZ|Poczta Słubice koło Gostynina 12|płocki|MAZOWIECKIE|9533|1|16370|O|83180
 8431|A|JOANNA|ŚWIĄZDEK|Poczta Ułęż 58|rycki|LUBELSKIE|8504|1|16895|R|228585
-184120|B|BARBARA|ŹDZIOBEK|Poczta Miszewo Murowane, ul. Pocztowa 1|płocki|MAZOWIECKIE|9471|1|106200|O|261850
-7836|A|PAWEŁ|ŹREBECKI|Poczta Krasnosielc 44|makowski|MAZOWIECKIE|6212|1|18920|O|441371
 183665|B|ANTONI|ŻARNA|Poczta Filia UP Grodzisk Mazowiecki 001, ul. Elizy Orzeszkowej 2A 40|grodziski|MAZOWIECKIE|5827|1|36170|R|93351
 8336|A|MAGDALENA|ŻARÓWSKA|Poczta Dąbrowa koło Mławy, ul. Dąbrowa koło Mławy 79|mławski|MAZOWIECKIE|6522|1|24915|R|46100
 184325|B|DAWID|ŻELECKI|Poczta Łęg Probostwo, ul. Łęg Probostwo 20|płocki|MAZOWIECKIE|9209|1|55040|O|267015
@@ -1605,6 +1603,7 @@
 7812|A|BARTŁOMIEJ|SOBULSKI|Poczta Wiązowna, ul. Lubelska 27b 14|otwocki|MAZOWIECKIE|5462|1||U|62190
 7832|A|JAGODA|RADZICH|Poczta Lesznowola, ul. Gminnej Rady Narodowej 60|piaseczyński|MAZOWIECKIE|5506|1||U|429336
 7835|A|IGNACY|CHODZIDŁO|Poczta Lubowidz, ul. Jana Pawła II 48|żuromiński|MAZOWIECKIE|9304|1||U|111093.5
+7836|A|PAWEŁ|ŹREBECKI|Poczta Krasnosielc 44|makowski|MAZOWIECKIE|6212|1||U|400776
 7855|A|ADAM|NELKIN|Poczta Zawidz Kościelny, ul. Mazowiecka 24|sierpecki|MAZOWIECKIE|9226|1||U|48925
 7859|A|TYMOTEUSZ|BIELKA|Skrytki Pocztowe Poczta Grodzisk Mazowiecki 001, ul. 1 Maja 2|grodziski|MAZOWIECKIE|5825|1||U|202879.75
 7883|A|SZYMON|BUF|Poczta Wyszogród, ul. Rynek 1|płocki|MAZOWIECKIE|9450|1||U|63220.5
@@ -1750,7 +1749,9 @@
 184043|B|NIKOLA|PIERSZEWSKI|Skrytki Pocztowe Poczta Marki 001, ul. Sportowa 1|wołomiński|MAZOWIECKIE|5270|1||U|168680
 184067|B|ANASTAZJA|KULSKI|Poczta Płock 007, ul. Marii Curie Skłodowskiej 1|M. Płock|MAZOWIECKIE|9405|1||U|17704
 184099|B|MICHAŁ|KONDEUSZ|Poczta Dębe Wielkie, ul. Strażacka 3|miński|MAZOWIECKIE|5311|1||U|77294
+184102|B|PAWEŁ|ŹREBECKI|Poczta Krasnosielc 44|makowski|MAZOWIECKIE|6212|1||U|40595
 184114|B|NIKODEM|ZODRO|Poczta Zalas 44|ostrołęcki|MAZOWIECKIE|7438|1||U|46100
+184120|B|BARBARA|ŹDZIOBEK|Poczta Miszewo Murowane, ul. Pocztowa 1|płocki|MAZOWIECKIE|9471|1||U|261850
 184131|B|KAJETAN|MALKUS|Skrytki Pocztowe Poczta Góra Kalwaria 001, ul. Kalwaryjska 14|piaseczyński|MAZOWIECKIE|5530|1||U|69100
 184156|B|FILIP|BURIENKO|Poczta Agencja UP Chynów koło Grójca 41|grójecki|MAZOWIECKIE|5651|1||U|14985
 184202|B|POLA|KAWIERSKI|Poczta Pruszków 001, ul. Kościuszki 30|pruszkowski|MAZOWIECKIE|5800|1||U|385145
@@ -2363,6 +2364,7 @@
 231805219|C|DOMINIK|POLANIAK|Poczta Joniec 94|płoński|MAZOWIECKIE|9131|2|41530|O|
 231805220|C|TYMON|MURKOCIŃSKI|Poczta Nowe Miasto koło Płońska, ul. Apteczna 8|płoński|MAZOWIECKIE|9120|2|22860|R|
 231805224|C|OLIWIER|SZEJNOWSKI|Poczta Paprotnia, ul. Jana Pawła II 4|siedlecki|MAZOWIECKIE|8107|2|85560|O|
+231805225|C|PAWEŁ|^REBECKI|Poczta Krasnosielc 44|makowski|MAZOWIECKIE|6212|2|18920|O|
 231805227|C|WIKTORIA|HAASO|Poczta Pruszków 001, Rejonowy Urząd Poczty, ul. Kościuszki 30|pruszkowski|MAZOWIECKIE|5800|2|6595|R|
 231805228|C|AMELIA|KOŁOBUC|Poczta Boguty, Al. Jana Pawła II 45|ostrowski|MAZOWIECKIE|7325|2|17275|R|
 231805229|C|AGATA|FLASSIELIER|Poczta Maciejowice koło Garwolina, ul. Kościelna 3|garwoliński|MAZOWIECKIE|8480|2|12860|O|
@@ -4420,6 +4422,7 @@
 231808600|C|JULIA|RÓZ|Poczta Poręba nad Bugiem 76|wyszkowski|MAZOWIECKIE|7308|2|53150|R|
 231808601|C|ANIELA|PONDZIEJ|Skrytki Pocztowe Poczta Ostrołęka 005, ul. J. Hallera 13|M. Ostrołęka|MAZOWIECKIE|7412|2|52670|O|
 231808602|C|POLA|TEJCHMA|Skrytki Pocztowe Poczta Siedlce 002, Pl. Zdanowskiego 2|M. Siedlce|MAZOWIECKIE|8110|2|25615|R|
+231808603|C|BARBARA|^DZIOBEK|Poczta Miszewo Murowane, ul. Pocztowa 1|płocki|MAZOWIECKIE|9471|2|106200|O|
 231808604|C|MATYLDA|LEPIDU|Poczta Zuzela 28|ostrowski|MAZOWIECKIE|7321|2|19415|R|
 231808605|C|MICHAŁ|MUTKE|Poczta Słupno, ul. Miszewska 8|płocki|MAZOWIECKIE|9472|2|25155|R|
 231808606|C|OSKAR|ŁEMISZ|Poczta Oddział UP Raciąż koło Sierpca, ul. Gralewo 12|płoński|MAZOWIECKIE|9166|2|51000|R|

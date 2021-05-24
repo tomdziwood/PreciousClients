@@ -213,21 +213,21 @@ def main():
     # insert_data_into_table(b_customer_list, 'B_CUSTOMERS', conn)
     # insert_data_into_table(b_transaction_list, 'B_TRANSACTIONS', conn)
     # insert_data_into_table(cust_info_list, 'C_CUSTOMERINFO', conn)
-
-
-    create_table_for_cursor_a_and_cursor_b(conn)
+    #
+    #
+    # create_table_for_cursor_a_and_cursor_b(conn)
 
     '''Change second parameter to True if you want to insert data into AB_CONNECTED table'''
     # print('-----A-----')
-    # cur_a = calculate_a_transactions(conn, False)
+    # cur_a = calculate_a_transactions(conn, True)
     # print('-----B-----')
-    # cur_b = calculate_b_transactions(conn, False)
+    # cur_b = calculate_b_transactions(conn, True)
     # print('-----C-----')
     # cur_c = select_from_customerinfo(conn)
     # create_final_table(conn)
     # insert_into_final_table(conn, True)
-    #find_best_customers(conn)
-    #write_result_to_file(conn)
+    # find_best_customers(conn)
+    # write_result_to_file(conn)
 
     '''Get the answer for question nr 7 - the greatest income, the greatest purchases'''
     the_greatest_income(conn)

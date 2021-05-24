@@ -234,7 +234,7 @@ def insert_into_final_table(c, insert):
 
 
 def find_best_customers(c, income_treshold=200000, transaction_treshold=500, vip_income=10900):
-    #
+
     cur = c.cursor()
 
     cur.execute('''UPDATE FINAL_TABLE
