@@ -192,17 +192,19 @@ def insert_into_final_table(c, insert):
                      C.est_income, C.own_or_rent, SUM(AB.purchases) FROM AB_CONNECTED AS AB INNER JOIN C_CUSTOMERINFO AS C 
                      ON AB.lastname = C.lastname AND AB.firstname = C.firstname AND AB.street_address = C.street_address
                      AND AB.voivodship = C.voivodship
-                     GROUP BY AB.lastname'''
+                     GROUP BY AB.street_address, AB.lastname, AB.firstname'''
     #customers from AB and not in Customerinfo
     query_ab = '''SELECT AB.custid, AB.tabsource, AB.firstname, AB.lastname, AB.street_address, AB.district, AB.voivodship,
-                  AB.postcode, AB.purchases FROM 
+                  AB.postcode, SUM(AB.purchases) FROM 
                   AB_CONNECTED AS AB LEFT JOIN C_CUSTOMERINFO AS C ON AB.lastname = C.lastname
-                  WHERE C.lastname IS NULL'''
+                  WHERE C.lastname IS NULL
+                  GROUP BY AB.street_address, AB.lastname, AB.firstname'''
     #customers from Customerinfo and not in AB
     query_c = '''SELECT C.id, C.tabsource, C.firstname, C.lastname, C.street_address, C.district, C.voivodship,
                  C.postcode, C.est_income, C.own_or_rent FROM
                  C_CUSTOMERINFO AS C LEFT JOIN AB_CONNECTED AS AB ON AB.lastname = C.lastname
-                 WHERE AB.lastname IS NULL'''
+                 WHERE AB.lastname IS NULL
+                 GROUP BY C.street_address, C.lastname, C.firstname'''
 
     if insert is True:
         cur.execute(query_inner)
