@@ -189,7 +189,9 @@ def insert_into_final_table(c, insert):
     cur = c.cursor()
     #inner join AB & Customerinfo
     query_inner = '''SELECT MIN(custid), AB.tabsource, AB.firstname, AB.lastname, AB.street_address, AB.district, AB.voivodship, AB.postcode,
-                     C.est_income, C.own_or_rent, SUM(AB.purchases) FROM AB_CONNECTED AS AB INNER JOIN C_CUSTOMERINFO AS C ON AB.lastname = C.lastname 
+                     C.est_income, C.own_or_rent, SUM(AB.purchases) FROM AB_CONNECTED AS AB INNER JOIN C_CUSTOMERINFO AS C 
+                     ON AB.lastname = C.lastname AND AB.firstname = C.firstname AND AB.street_address = C.street_address
+                     AND AB.voivodship = C.voivodship
                      GROUP BY AB.lastname'''
     #customers from AB and not in Customerinfo
     query_ab = '''SELECT AB.custid, AB.tabsource, AB.firstname, AB.lastname, AB.street_address, AB.district, AB.voivodship,
@@ -229,8 +231,6 @@ def insert_into_final_table(c, insert):
     for row in data_ab:
         print(row)
     return cur
-
-    return
 
 
 def find_best_customers(c, income_treshold=200000, transaction_treshold=500, vip_income=10900):
