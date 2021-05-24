@@ -197,9 +197,9 @@ def insert_into_final_table(c):
                   WHERE C.lastname IS NULL'''
     #customers from Customerinfo and not in AB
     query_c = '''SELECT * FROM
-                 AB_CONNECTED AS AB LEFT JOIN C_CUSTOMERINFO AS C ON AB.lastname = C.lastname
+                 C_CUSTOMERINFO AS C LEFT JOIN AB_CONNECTED AS AB ON AB.lastname = C.lastname
                  WHERE AB.lastname IS NULL'''
-    cur.execute(query_ab)
+    cur.execute(query_c)
     data_ab = cur.fetchall()
     for row in data_ab:
         print(row)
