@@ -6,8 +6,9 @@ from model.ATransaction import ATransaction
 from model.BCustomer import BCustomer
 from model.BTransaction import BTransaction
 from model.CustInfo import CustInfo
-from database import create_tables, create_connection, insert_data_into_table, test_join, calculate_b_transactions, \
-    calculate_a_transactions, select_from_customerinfo, create_table_for_cursor_a_and_cursor_b, join_cursor_a_with_cursor_b
+from database import create_tables, create_connection, insert_data_into_table, calculate_b_transactions, \
+    calculate_a_transactions, select_from_customerinfo, create_table_for_cursor_a_and_cursor_b, group_ab_table,\
+    insert_into_final_table, create_final_table
 
 
 def read_a_customers():
@@ -230,14 +231,16 @@ def main():
 
     create_table_for_cursor_a_and_cursor_b(conn)
 
+    '''Change second parameter to True if you want to insert data into AB_CONNECTED table'''
     #print('-----A-----')
-    cur_a = calculate_a_transactions(conn, False)
+    # cur_a = calculate_a_transactions(conn, False)
     #print('-----B-----')
-    cur_b = calculate_b_transactions(conn, False)
+    # cur_b = calculate_b_transactions(conn, False)
     #print('-----C-----')
-    cur_c = select_from_customerinfo(conn)
-
-
+    # cur_c = select_from_customerinfo(conn)
+    #group_ab_table(conn)
+    #create_final_table(conn)
+    insert_into_final_table(conn)
 
 
 if __name__ == '__main__':

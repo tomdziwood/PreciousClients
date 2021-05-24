@@ -91,16 +91,6 @@ def insert_data_into_table(list, table, c):
     return
 
 
-def test_join(c):
-    cur = c.cursor()
-    query = '''SELECT * FROM A_TRANSACTIONS LEFT JOIN A_CUSTOMERS ON A_TRANSACTIONS.custid = A_CUSTOMERS.custid'''
-    cur.execute(query)
-    rows = cur.fetchall()
-    for row in rows:
-        print(row)
-    return
-
-
 def calculate_b_transactions(c, insert):
     cur = c.cursor()
     query = '''SELECT C.custid, C.firstname, C.lastname, C.street_address, C.district,
@@ -162,9 +152,9 @@ def select_from_customerinfo(c):
     query = '''SELECT id, firstname, lastname, street_address, district, voivodship, postcode, est_income, 
                own_or_rent FROM C_CUSTOMERINFO'''
     cur.execute(query)
-    rows = cur.fetchall()
-    # for row in rows:
-    #     print(row)
+    data_c = cur.fetchall()
+    for row in data_c:
+        print(row)
     return cur
 
 
@@ -175,23 +165,55 @@ def create_table_for_cursor_a_and_cursor_b(c):
     return
 
 
-def join_cursor_a_with_cursor_b(c, cur_a, cur_b):
-    cursor = c.cursor()
-    data_a = cur_a.fetchall()
-    data_b = cur_b.fetchall()
-    fields_a = ','.join('?' for desc in cur_a.description)
-    fields_b = ','.join('?' for desc in cur_b.description)
+def group_ab_table(c):
+    '''Show first_defined id, firstname, lastname and sum of purchases from AB'''
+    cur = c.cursor()
+    query = '''SELECT MIN(custid), firstname, lastname, SUM(purchases) FROM AB_CONNECTED
+               GROUP BY lastname'''
+    cur.execute(query)
+    data_ab = cur.fetchall()
+    for row in data_ab:
+        print(row)
+    return cur
 
-    stmt = "insert into {} values ({})".format('AB_CONNECTED', fields_a)
-    cursor.executemany(stmt, data_a)
-    stmt = "insert into {} values ({})".format('AB_CONNECTED', fields_b)
-    cursor.executemany(stmt, data_b)
-    c.commit()
+
+def create_final_table(c):
+    c.execute('''CREATE TABLE IF NOT EXISTS FINAL_TABLE
+                 (Id number PRIMARY KEY, Source varchar, Fname varchar, Lname varchar, Street_address varchar[110], District varchar[40],
+                  Voivodship varchar[50], postcode varchar[5], Preferred varchar, est_income number, own_or_rent varchar,
+                  Purchases number)''')
+    return
+
+
+def insert_into_final_table(c):
+    cur = c.cursor()
+    #inner join AB & Customerinfo
+    query_inner = '''SELECT MIN(custid), AB.firstname, AB.lastname, AB.street_address, AB.district, AB.voivodship, AB.postcode,
+                     SUM(AB.purchases), C.est_income, C.own_or_rent FROM AB_CONNECTED AS AB INNER JOIN C_CUSTOMERINFO AS C ON AB.lastname = C.lastname 
+                     GROUP BY AB.lastname'''
+    #customers from AB and not in Customerinfo
+    query_ab = '''SELECT * FROM
+                  AB_CONNECTED AS AB LEFT JOIN C_CUSTOMERINFO AS C ON AB.lastname = C.lastname
+                  WHERE C.lastname IS NULL'''
+    #customers from Customerinfo and not in AB
+    query_c = '''SELECT * FROM
+                 AB_CONNECTED AS AB LEFT JOIN C_CUSTOMERINFO AS C ON AB.lastname = C.lastname
+                 WHERE AB.lastname IS NULL'''
+    cur.execute(query_ab)
+    data_ab = cur.fetchall()
+    for row in data_ab:
+        print(row)
+
+    #TODO: insert
+    return cur
+
 
 
 
 # Info: zdarza ta sama osoba z innym id w jednym pliku, np. w A
 # osoba o nazwisku 'AU' ma dwa idki
+# Brakuje preferred w insert into final table...
 # TODO: Insert data from all returned cursors to one table
 # TODO: Parammetrize function to find best customers
 # TODO: Test solution
+# Dodać pole source do każdej tabeli?
