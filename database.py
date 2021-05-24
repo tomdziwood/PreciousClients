@@ -101,23 +101,28 @@ def test_join(c):
     return
 
 
-def calculate_b_transactions(c):
+def calculate_b_transactions(c, insert):
     cur = c.cursor()
     query = '''SELECT C.custid, C.firstname, C.lastname, C.street_address, C.district,
-               C.voivodship, SUM(price*quantity) AS purchases FROM B_TRANSACTIONS LEFT JOIN B_CUSTOMERS AS C ON B_TRANSACTIONS.custid = C.custid
+               C.voivodship, C.postcode, SUM(price*quantity) AS purchases FROM B_TRANSACTIONS LEFT JOIN B_CUSTOMERS AS C ON B_TRANSACTIONS.custid = C.custid
                GROUP BY C.custid'''
     cur.execute(query)
-    rows = cur.fetchall()
-    for row in rows:
+    data_b = cur.fetchall()
+    if insert is True:
+        fields_b = ','.join('?' for desc in cur.description)
+        stmt = "insert into {} values ({})".format('AB_CONNECTED', fields_b)
+        cur.executemany(stmt, data_b)
+        c.commit()
+    for row in data_b:
         print(row)
     return cur
 
 
-def calculate_a_transactions(c):
+def calculate_a_transactions(c, insert):
     cur = c.cursor()
 
     #sum of purchases
-    query_pur = '''SELECT F.lname, SUM(quantity*price*(100-discount))
+    query_pur = '''SELECT F.lname, SUM(quantity*price*(100-discount)*0.01)
                    FROM A_TRANSACTIONS LEFT JOIN A_CUSTOMERS AS F ON A_TRANSACTIONS.custid = F.custid
                    WHERE transtype = 'PUR'
                    GROUP BY F.custid'''
@@ -130,9 +135,9 @@ def calculate_a_transactions(c):
 
     #purchases-returns
     query = '''SELECT H.custid, H.fname, H.lname, H.street_address, H.district, H.voivodship,
-               H.postcode, H.preferred, pur - IFNULL(ret, 0) as purchases              
+               H.postcode, pur - IFNULL(ret, 0) as purchases              
                FROM (SELECT F.custid, F.fname, F.lname, F.street_address, F.district, F.voivodship,
-               F.postcode, F.preferred, SUM(quantity*price*(100-discount)) as pur               
+               F.postcode, F.preferred, SUM(quantity*price*(100-discount)*0.01) as pur               
                      FROM A_TRANSACTIONS LEFT JOIN A_CUSTOMERS AS F ON A_TRANSACTIONS.custid = F.custid
                      WHERE transtype = 'PUR'
                      GROUP BY F.custid) AS H left join (
@@ -141,8 +146,13 @@ def calculate_a_transactions(c):
                         WHERE transtype = 'RET'
                         GROUP BY G.custid) AS I ON H.custid = I.custid'''
     cur.execute(query)
-    rows = cur.fetchall()
-    for row in rows:
+    data_a = cur.fetchall()
+    if insert is True:
+        fields_a = ','.join('?' for desc in cur.description)
+        stmt = "insert into {} values ({})".format('AB_CONNECTED', fields_a)
+        cur.executemany(stmt, data_a)
+        c.commit()
+    for row in data_a:
         print(row)
     return cur
 
@@ -153,10 +163,35 @@ def select_from_customerinfo(c):
                own_or_rent FROM C_CUSTOMERINFO'''
     cur.execute(query)
     rows = cur.fetchall()
-    for row in rows:
-        print(row)
+    # for row in rows:
+    #     print(row)
     return cur
 
+
+def create_table_for_cursor_a_and_cursor_b(c):
+    c.execute('''CREATE TABLE IF NOT EXISTS AB_CONNECTED
+                 (custid number PRIMARY KEY, firstname varchar, lastname varchar, street_address varchar[100], district varchar, 
+                 voivodship varchar, postcode number, purchases number)''')
+    return
+
+
+def join_cursor_a_with_cursor_b(c, cur_a, cur_b):
+    cursor = c.cursor()
+    data_a = cur_a.fetchall()
+    data_b = cur_b.fetchall()
+    fields_a = ','.join('?' for desc in cur_a.description)
+    fields_b = ','.join('?' for desc in cur_b.description)
+
+    stmt = "insert into {} values ({})".format('AB_CONNECTED', fields_a)
+    cursor.executemany(stmt, data_a)
+    stmt = "insert into {} values ({})".format('AB_CONNECTED', fields_b)
+    cursor.executemany(stmt, data_b)
+    c.commit()
+
+
+
+# Info: zdarza ta sama osoba z innym id w jednym pliku, np. w A
+# osoba o nazwisku 'AU' ma dwa idki
 # TODO: Insert data from all returned cursors to one table
 # TODO: Parammetrize function to find best customers
 # TODO: Test solution

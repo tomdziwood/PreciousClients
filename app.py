@@ -6,7 +6,8 @@ from model.ATransaction import ATransaction
 from model.BCustomer import BCustomer
 from model.BTransaction import BTransaction
 from model.CustInfo import CustInfo
-from database import create_tables, create_connection, insert_data_into_table, test_join, calculate_b_transactions, calculate_a_transactions, select_from_customerinfo
+from database import create_tables, create_connection, insert_data_into_table, test_join, calculate_b_transactions, \
+    calculate_a_transactions, select_from_customerinfo, create_table_for_cursor_a_and_cursor_b, join_cursor_a_with_cursor_b
 
 
 def read_a_customers():
@@ -227,12 +228,16 @@ def main():
     # insert_data_into_table(b_transaction_list, 'B_TRANSACTIONS', conn)
     # insert_data_into_table(cust_info_list, 'C_CUSTOMERINFO', conn)
 
-    print('-----A-----')
-    cur = calculate_a_transactions(conn)
-    print('-----B-----')
-    cur = calculate_b_transactions(conn)
-    print('-----C-----')
-    cur = select_from_customerinfo(conn)
+    create_table_for_cursor_a_and_cursor_b(conn)
+
+    #print('-----A-----')
+    cur_a = calculate_a_transactions(conn, False)
+    #print('-----B-----')
+    cur_b = calculate_b_transactions(conn, False)
+    #print('-----C-----')
+    cur_c = select_from_customerinfo(conn)
+
+
 
 
 if __name__ == '__main__':
