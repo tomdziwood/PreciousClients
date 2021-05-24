@@ -234,7 +234,7 @@ def insert_into_final_table(c, insert):
 
 
 def find_best_customers(c, income_treshold=200000, transaction_treshold=500, vip_income=10900):
-    #1769
+    #
     cur = c.cursor()
 
     cur.execute('''UPDATE FINAL_TABLE
@@ -272,5 +272,34 @@ def write_result_to_file(c):
         writer = csv.writer(f, delimiter="|")  # create a CSV writer, tab delimited
         writer.writerows(rows)  # write your SQLite data
     return
+
+
+def the_greatest_income(c):
+    '''Show pearson with the greatest income'''
+    cur = c.cursor()
+    query = '''SELECT * FROM FINAL_TABLE
+               WHERE est_income=(
+                  SELECT max(est_income) FROM FINAL_TABLE 
+               )'''
+    cur.execute(query)
+    data_ab = cur.fetchall()
+    for row in data_ab:
+        print(row)
+    return cur
+
+
+def the_greatest_purchases(c):
+    '''Show pearson with the greatest purchases'''
+    cur = c.cursor()
+    query = '''SELECT * FROM FINAL_TABLE
+               WHERE Purchases=(
+                  SELECT max(Purchases) FROM FINAL_TABLE 
+               )'''
+    cur.execute(query)
+    data_ab = cur.fetchall()
+    for row in data_ab:
+        print(row)
+    return cur
+
 
 
