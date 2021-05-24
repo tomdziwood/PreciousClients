@@ -223,17 +223,36 @@ def insert_into_final_table(c, insert):
                "est_income, own_or_rent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
         cur.executemany(stmt, data_c)
         c.commit()
-
-
     return
 
 
+def find_best_customers(c, income_treshold=200000, transaction_treshold=500, vip_income=10900):
+    #1769
+    cur = c.cursor()
+
+    cur.execute('''UPDATE FINAL_TABLE
+                   SET own_or_rent = 'U'
+                   WHERE own_or_rent is null''')
+    c.commit()
+
+    cur.execute('''UPDATE FINAL_TABLE
+                   SET Preferred = 2
+                   WHERE (Purchases < ? AND est_income < ?) OR (Purchases is null AND est_income is null) OR
+                   (Purchases < ? AND est_income is null) OR (Purchases is null AND est_income < ?)
+                   OR est_income > ?''', (transaction_treshold, income_treshold, transaction_treshold, income_treshold, vip_income))
+    c.commit()
+
+    cur.execute('''UPDATE FINAL_TABLE
+                   SET Preferred = 1
+                   WHERE Purchases > ? OR est_income > ?
+                   AND est_income < ?''', (transaction_treshold, income_treshold, vip_income))
+    c.commit()
+
+    cur.execute('''SELECT COUNT(*)
+                   FROM FINAL_TABLE
+                   WHERE Preferred = 1''')
+    data = cur.fetchall()
+    for row in data:
+        print(row)
 
 
-# Info: zdarza ta sama osoba z innym id w jednym pliku, np. w A
-# osoba o nazwisku 'AU' ma dwa idki
-# Brakuje preferred w insert into final table...
-# TODO: Insert data from all returned cursors to one table
-# TODO: Parammetrize function to find best customers
-# TODO: Test solution
-# Dodać pole source do każdej tabeli?
