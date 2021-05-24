@@ -227,7 +227,7 @@ def main():
     create_final_table(conn)
     insert_into_final_table(conn, True)
     find_best_customers(conn)
-    write_result_to_file(conn)
+    # write_result_to_file(conn)
 
     '''Get the answer for question nr 7 - the greatest income, the greatest purchases'''
     the_greatest_income(conn)
