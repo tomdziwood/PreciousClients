@@ -29,23 +29,8 @@ class CustInfo:
         return '|'.join(str_list)
 
 
-NATIVE_POLISH_IBM = ['¯', 'Æ', '¿', '¼', 'æ', '³', '¦', 'ñ', '¶', '£', '±', 'ê', '^']
-NATIVE_POLISH_ISO = ['Ż', 'Ć', 'ż', 'ź', 'ć', 'ł', 'Ś', 'ń', 'ś', 'Ł', 'ą', 'ę', 'Ź']
-
-
-def converse_native_characters(character: str):
-    if character in NATIVE_POLISH_IBM:
-        i = NATIVE_POLISH_IBM.index(character)
-        return NATIVE_POLISH_ISO[i].encode(encoding="iso-8859-2")
-    else:
-        return character.encode(encoding="iso-8859-2")
-
-
 def converse_words_with_native_characters(string: str):
-    list_of_bytes = [converse_native_characters(character) for character in string]
-    concatenated_bytes = b''.join(list_of_bytes)
-    new_string = codecs.decode(concatenated_bytes, encoding='iso-8859-2')
-    return new_string
+    return bytes(string, encoding='raw_unicode_escape').decode(encoding='iso-8859-2')
 
 
 def read_cust_info():

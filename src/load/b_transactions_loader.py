@@ -33,7 +33,7 @@ def read_b_transactions():
             price = int(splitted[2])
             quantity = int(splitted[3])
             transdate = splitted[4]
-            custid = int(splitted[0])
+            custid = int(splitted[5])
 
             b_transaction = BTransaction(transid, prodid, price, quantity, transdate, custid)
             # print(b_transaction)

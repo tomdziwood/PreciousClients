@@ -7,8 +7,8 @@ from model.BCustomer import BCustomer
 from model.BTransaction import BTransaction
 from model.CustInfo import CustInfo
 from database import create_tables, create_connection, insert_data_into_table, calculate_b_transactions, \
-    calculate_a_transactions, select_from_customerinfo, create_table_for_cursor_a_and_cursor_b, group_ab_table,\
-    insert_into_final_table, create_final_table
+    calculate_a_transactions, select_from_customerinfo, create_table_for_cursor_a_and_cursor_b, group_ab_table, \
+    insert_into_final_table, create_final_table, the_greatest_income, the_greatest_purchases
 
 
 def read_a_customers():
@@ -102,23 +102,8 @@ def read_b_transactions():
     return b_transaction_list
 
 
-NATIVE_POLISH_IBM = ['¯', 'Æ', '¿', '¼', 'æ', '³', '¦', 'ñ', '¶', '£', '±', 'ê', '^']
-NATIVE_POLISH_ISO = ['Ż', 'Ć', 'ż', 'ź', 'ć', 'ł', 'Ś', 'ń', 'ś', 'Ł', 'ą', 'ę', 'Ź']
-
-
-def converse_native_characters(character: str):
-    if character in NATIVE_POLISH_IBM:
-        i = NATIVE_POLISH_IBM.index(character)
-        return NATIVE_POLISH_ISO[i].encode(encoding="iso-8859-2")
-    else:
-        return character.encode(encoding="iso-8859-2")
-
-
 def converse_words_with_native_characters(string: str):
-    list_of_bytes = [converse_native_characters(character) for character in string]
-    concatenated_bytes = b''.join(list_of_bytes)
-    new_string = codecs.decode(concatenated_bytes, encoding='iso-8859-2')
-    return new_string
+    return bytes(string, encoding='raw_unicode_escape').decode(encoding='iso-8859-2')
 
 
 def read_cust_info():
@@ -239,8 +224,13 @@ def main():
     # cur_b = calculate_b_transactions(conn, False)
     # print('-----C-----')
     # cur_c = select_from_customerinfo(conn)
-    #create_final_table(conn)
-    insert_into_final_table(conn, True)
+    # create_final_table(conn)
+    # insert_into_final_table(conn, True)
+
+
+    '''Get the answer for question nr 7 - the greatest income, the greatest purchases'''
+    the_greatest_income(conn)
+    the_greatest_purchases(conn)
 
 
 if __name__ == '__main__':

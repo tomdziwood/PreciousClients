@@ -228,6 +228,33 @@ def insert_into_final_table(c, insert):
     return
 
 
+def the_greatest_income(c):
+    '''Show pearson with the greatest income'''
+    cur = c.cursor()
+    query = '''SELECT * FROM FINAL_TABLE
+               WHERE est_income=(
+                  SELECT max(est_income) FROM FINAL_TABLE 
+               )'''
+    cur.execute(query)
+    data_ab = cur.fetchall()
+    for row in data_ab:
+        print(row)
+    return cur
+
+
+def the_greatest_purchases(c):
+    '''Show pearson with the greatest purchases'''
+    cur = c.cursor()
+    query = '''SELECT * FROM FINAL_TABLE
+               WHERE Purchases=(
+                  SELECT max(Purchases) FROM FINAL_TABLE 
+               )'''
+    cur.execute(query)
+    data_ab = cur.fetchall()
+    for row in data_ab:
+        print(row)
+    return cur
+
 
 
 # Info: zdarza ta sama osoba z innym id w jednym pliku, np. w A
